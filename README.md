@@ -1,1 +1,1 @@
-# Pseudo-Python_Casio-BASIC_Transpiler-Interpreter
+# Pseudo-Python Casio-BASIC Transpiler-Interpreter

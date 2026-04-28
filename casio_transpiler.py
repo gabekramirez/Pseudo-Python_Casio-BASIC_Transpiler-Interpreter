@@ -4,8 +4,8 @@ import os
 
 SOURCE_FILE = "source/example_pseudo_python_program.py"
 BUILD_PATH = "build"
-COMPILE_TO_WEB = True
-
+DEBUG = False
+COMPILE_TO_WEB = False
 
 
 _LABELS = "0123456789ABCDEFGHIJKLMNOPQRRSTUVWXYZ"
@@ -189,7 +189,7 @@ def compile_line(line: str, functions: list[str]) -> str | tuple[str, int]:
     return "", 0
 
 
-def python_to_casio(input_file: str, *, log: bool = False) -> str:
+def python_to_casio(input_file: str) -> str:
     compiled = ""
     tabs = []
     functions = ["stop()"]
@@ -228,7 +228,7 @@ def python_to_casio(input_file: str, *, log: bool = False) -> str:
     for index, label in enumerate(_LABELS[1:-1]):
         compiled += f"If MOD(Z,{len(_LABELS)})={index + 1}\nThen Int (Z/{len(_LABELS)})->Z\nGoto {label}\nIfEnd\n"
     x = compiled[:-1].replace("\n", "\n" + " " * 19)
-    if log: print(f"START OF FILE ---> {x}")
+    if DEBUG: print(f"START OF FILE ---> {x}")
 
     for j, line in enumerate(file):
         line = line[:-1]
@@ -252,7 +252,7 @@ def python_to_casio(input_file: str, *, log: bool = False) -> str:
                     else:
                         x = "ERROR\n"
                     compiled += x
-                    if log: print(a * "    " + f"BREAK TAB ---> {x[:-1]}")
+                    if DEBUG: print(a * "    " + f"BREAK TAB ---> {x[:-1]}")
                 tabs.pop(-1)
 
         if "  # *" in line:
@@ -265,7 +265,7 @@ def python_to_casio(input_file: str, *, log: bool = False) -> str:
                     tabs.append(-1)
             line = line[line.find("  # *") + 5:]
             compiled += line + "\n"
-            if log: print(f"{file[j][:-1]} ---> {line}")
+            if DEBUG: print(f"{file[j][:-1]} ---> {line}")
         else:
             line = line.lstrip()
             if "  # " in line and ("\"" not in line or line.rindex("\"") < line.rindex("  # ")):
@@ -278,15 +278,17 @@ def python_to_casio(input_file: str, *, log: bool = False) -> str:
                     tabs.append(y)
                 compiled += x
                 if x: x = x[:-1].replace("\n", "\n      " + " " * len(file[j][:-1]))
-                if log: print(f"{file[j][:-1]} ---> {x}" if x else file[j][:-1])
+                if DEBUG: print(f"{file[j][:-1]} ---> {x}" if x else file[j][:-1])
     compiled += "Goto Z\nLbl 0"
-    if log: print(f"END OF FILE ---> Goto Z\n                 Lbl 0")
+    if DEBUG: print(f"END OF FILE ---> Goto Z\n                 Lbl 0")
     return compiled
 
 
 def main():
     output_file = file_name_python_to_casio(SOURCE_FILE)
-    output_file_data = python_to_casio(SOURCE_FILE, log=True)
+    output_file_data = python_to_casio(SOURCE_FILE)
+    if not os.path.isdir(BUILD_PATH):
+        os.mkdir(BUILD_PATH)
     with open(os.path.join(BUILD_PATH, output_file) + ".txt", "w") as file:
         file.write(output_file_data)
 

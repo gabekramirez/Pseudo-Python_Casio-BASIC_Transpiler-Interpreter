@@ -1,11 +1,12 @@
 from pygame import *
 from casio_basic import *
 import os
+import sys
 import asyncio
 
 
-BUILD_FILE = f"build/{os.listdir('build')[0]}"
-DEBUG = False
+BUILD_FILE = "build/{}"  # {} gets formatted with first file found in directory
+DEBUG = True
 INSTRUCTIONS_PER_FRAME = 100
 
 
@@ -14,9 +15,18 @@ _OPERATORS = ("^", "*", "/", "+", "-", "=", "<>", "<", ">", "<=", ">=", " And ",
 
 
 async def main():
+    if len(sys.argv) == 1:
+        file_name = BUILD_FILE
+        if "{}" in file_name:
+            file_name = file_name.format(os.listdir(os.path.dirname(file_name))[0])
+    elif len(sys.argv) == 2:
+        file_name = sys.argv[1]
+    else:
+        raise IndexError(f"Expected 0 or 1 command line arguments.\nGot {len(sys.argv) - 1}")
+
     load()
-    with open(BUILD_FILE, "r") as build_file:
-        file = "".join(build_file.readlines()).split("\n")
+    with open(file_name, "r") as file_data:
+        file = "".join(file_data.readlines()).split("\n")
 
     def update_pygame_display(*, toggle_fullscreen: bool = False, reset: bool = False) -> surface:
         nonlocal screen, fullscreen, previous_screen_size
@@ -286,6 +296,7 @@ async def main():
             elif len(tokenized) == 1 and tokenized[0][0] == "String":
                 display_text = tokenized[0][1]
                 display_text += " " * (DISPLAY_SIZE - len(display_text))
+                print("!!!")
                 tokenized.clear()
                 break
 
@@ -474,44 +485,47 @@ async def main():
         line = 0
         running = True
         while running:
-            for e in event.get():
-                if e.type == QUIT:
-                    running = False
-                    break
-                elif e.type == KEYDOWN:
-                    e_key = e.key
-                    e_unicode = e.unicode
-                    if e_key == K_F10:
-                        update_pygame_display(reset=True)
-                    elif e_key == K_F11:
-                        update_pygame_display(toggle_fullscreen=True)
-                    elif e_key is not None:
-                        if e_key in keyboard_mapping:
-                            if keyboard_mapping[e_key] not in keys_pressed:
-                                keys_pressed.append(keyboard_mapping[e_key])
-                            if e_key == K_RETURN and not (answering == 1 and answer == ""):
-                                if answering == 2:
-                                    answer = ""
-                                answering = 0
-                                answer_cursor = 21
-                                answer_tick = 0
-                            elif (answering == 1 and
-                                  e_unicode in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '\b')):
-                                answer_tick = 0
-                                if e_unicode == "\b":
-                                    if len(answer) > 0:
-                                        answer = answer[:-1]
-                                        display_text = (display_text[:answer_cursor - 1] + "  " +
+            if not display.get_active():
+                running = False
+            else:
+                for e in event.get():
+                    if e.type == QUIT:
+                        running = False
+                        break
+                    elif e.type == KEYDOWN:
+                        e_key = e.key
+                        e_unicode = e.unicode
+                        if e_key == K_F10:
+                            update_pygame_display(reset=True)
+                        elif e_key == K_F11:
+                            update_pygame_display(toggle_fullscreen=True)
+                        elif e_key is not None:
+                            if e_key in keyboard_mapping:
+                                if keyboard_mapping[e_key] not in keys_pressed:
+                                    keys_pressed.append(keyboard_mapping[e_key])
+                                if e_key == K_RETURN and not (answering == 1 and answer == ""):
+                                    if answering == 2:
+                                        answer = ""
+                                    answering = 0
+                                    answer_cursor = 21
+                                    answer_tick = 0
+                                elif (answering == 1 and
+                                      e_unicode in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '\b')):
+                                    answer_tick = 0
+                                    if e_unicode == "\b":
+                                        if len(answer) > 0:
+                                            answer = answer[:-1]
+                                            display_text = (display_text[:answer_cursor - 1] + "  " +
+                                                            display_text[answer_cursor + 1:])
+                                            answer_cursor -= 1
+                                    else:
+                                        answer += e.unicode
+                                        display_text = (display_text[:answer_cursor] + e_unicode +
                                                         display_text[answer_cursor + 1:])
-                                        answer_cursor -= 1
-                                else:
-                                    answer += e.unicode
-                                    display_text = (display_text[:answer_cursor] + e_unicode +
-                                                    display_text[answer_cursor + 1:])
-                                    answer_cursor += 1
-                elif e.type == KEYUP:
-                    if e.key in keyboard_mapping and keyboard_mapping[e.key] in keys_pressed:
-                        keys_pressed.remove(keyboard_mapping[e.key])
+                                        answer_cursor += 1
+                    elif e.type == KEYUP:
+                        if e.key in keyboard_mapping and keyboard_mapping[e.key] in keys_pressed:
+                            keys_pressed.remove(keyboard_mapping[e.key])
             if len(keys_pressed) > 0:
                 getkey = keys_pressed[0]
             else:
@@ -519,7 +533,9 @@ async def main():
             if running:
                 for _ in range(INSTRUCTIONS_PER_FRAME):
                     if answering == 0 and tick_time <= 0:
-                        if file[line] == "Tick":
+                        if line >= len(file):
+                            tick_time = float("Inf")
+                        elif file[line] == "Tick":
                             tick_time = 0.15
                             line += 1
                         else:
@@ -532,6 +548,7 @@ async def main():
                     c = "|" if answer_tick % 2 < 1 else " "
                     display_text = display_text[:answer_cursor] + c + display_text[answer_cursor + 1:]
 
+                if display_text.strip(): print(display_text)
                 display_screen.fill((0, 0, 0))
                 for i in range(DISPLAY_SIZE):
                     rendered_line = display_font.render(display_text[i], False, (255, 255, 255))

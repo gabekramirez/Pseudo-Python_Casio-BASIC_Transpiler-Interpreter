@@ -1,11 +1,12 @@
 from casio_basic import disps, string_python_to_casio, file_name_python_to_casio
 import os
+import sys
 
 
-SOURCE_FILE = "source/example_pseudo_python_program.py"
+SOURCE_FILE = "source/{}"  # {} gets formatted with first file found in directory
 BUILD_PATH = "build"
-DEBUG = False
-COMPILE_TO_WEB = False
+DEBUG = True
+COMPILE_FOR_INTERPRETER = True  # adds Tick statements which aren't usually present in Casio BASIC
 
 
 _LABELS = "0123456789ABCDEFGHIJKLMNOPQRRSTUVWXYZ"
@@ -122,8 +123,12 @@ def compile_line(line: str, functions: list[str]) -> str | tuple[str, int]:
         line = line[4:].replace(", ", ",")
         return f"MOD({compile_expression(line, functions)})", 0
 
-    elif COMPILE_TO_WEB and line.startswith("tick()"):
-        return "Tick\n", 0
+    elif COMPILE_FOR_INTERPRETER and line.startswith("tick("):
+        if line.startswith("tick()"):
+            n = 1
+        else:
+            n = int(line[5:].split(")")[0])
+        return "Tick\n" * n, 0
     elif line == "clr_text()":
         return "ClrText\n", 0
     elif line.startswith("locate("):
@@ -131,11 +136,9 @@ def compile_line(line: str, functions: list[str]) -> str | tuple[str, int]:
         extra = ""
         if len(line) > 3:
             line[2] = ", ".join(line[2:])
-        if line[2].endswith(") or tick("):
-            line[2] = line[2][:-10]
-            if COMPILE_TO_WEB:
-                extra = "Tick\n"
         return f"Locate {line[0]},{line[1]},{compile_expression(line[2], functions)}\n" + extra, 0
+    elif line.startswith("show_str("):
+        return line[9:-1] + "\n", 0
     elif line.startswith("set_str("):
         b = line.find(", ")
         a = line[8:b]
@@ -195,16 +198,24 @@ def python_to_casio(input_file: str) -> str:
     functions = ["stop()"]
 
     with open(input_file, 'r') as read_file:
-        file: list[str] = list(read_file.readlines())
+        file: list[str] = read_file.readlines()
 
     while "\n" in file:
         file.remove("\n")
-    for i, line in enumerate(file):  # replace elif with else: if
+    i = 0
+    while i < len(file):
+        line = file[i]
         tab_count = line.count("    ", 0, len(line) - len(line.lstrip()))
         line = line.lstrip()
-        if line.startswith("def "):
+        if ";" in line:  # replace inline semicolons with newlines
+            lines = line[:-1].split(";")
+            lines.reverse()
+            file.pop(i)
+            for new_line in lines:
+                file.insert(i, "    " * tab_count + new_line.lstrip() + "\n")
+        elif line.startswith("def "):  # add each def to functions
             functions.append(line.rstrip()[4:-1])
-        elif line.startswith("elif "):
+        elif line.startswith("elif "):  #  replace elif with else: if
             file.insert(i + 1, file[i].replace("elif", "if"))
             file[i] = "    " * (tab_count - 1) + "else:\n"
             j = i + 1
@@ -218,15 +229,16 @@ def python_to_casio(input_file: str) -> str:
                     t += 1
             for j in range(i, j):
                 file[j] = "    " + file[j]
+        i += 1
 
     if len(functions) >= len(_LABELS):
         raise ValueError(f"More functions defined ({len(functions)}) "
                          f"than labels available ({len(_LABELS) - 1}).")
 
     main_function = functions.index("main()")
-    compiled += f"Goto {main_function}\nLbl Z\n"
-    for index, label in enumerate(_LABELS[1:-1]):
-        compiled += f"If MOD(Z,{len(_LABELS)})={index + 1}\nThen Int (Z/{len(_LABELS)})->Z\nGoto {label}\nIfEnd\n"
+    compiled += f"0->Z\nGoto {main_function}\nLbl Z\n"
+    for index, label in enumerate(_LABELS[0:-1]):
+        compiled += f"If MOD(Z,{len(_LABELS)})={index}\nThen Int (Z/{len(_LABELS)})->Z\nGoto {label}\nIfEnd\n"
     x = compiled[:-1].replace("\n", "\n" + " " * 19)
     if DEBUG: print(f"START OF FILE ---> {x}")
 
@@ -285,8 +297,17 @@ def python_to_casio(input_file: str) -> str:
 
 
 def main():
-    output_file = file_name_python_to_casio(SOURCE_FILE)
-    output_file_data = python_to_casio(SOURCE_FILE)
+    if len(sys.argv) == 1:
+        file_name = SOURCE_FILE
+        if "{}" in file_name:
+            file_name = file_name.format(os.listdir(os.path.dirname(file_name))[0])
+    elif len(sys.argv) == 2:
+        file_name = sys.argv[1]
+    else:
+        raise IndexError(f"Expected 0 or 1 command line arguments.\nGot {len(sys.argv) - 1}")
+
+    output_file = file_name_python_to_casio(file_name)
+    output_file_data = python_to_casio(file_name)
     if not os.path.isdir(BUILD_PATH):
         os.mkdir(BUILD_PATH)
     with open(os.path.join(BUILD_PATH, output_file) + ".txt", "w") as file:

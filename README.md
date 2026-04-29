@@ -1,4 +1,4 @@
-# Pseudo-Python Casio-BASIC Transpiler-Interpreter
+# Pseudo-Python Casio-BASIC Transpiler/Interpreter
 
 This is my own custom Python library ([casio_basic.py](casio_basic.py)), transpiler ([casio_transpiler.py](casio_transpiler.py)), and interpreter ([casio_interpreter.py](casio_interpreter.py)) I wrote to emulate Casio BASIC. The purpose of these programs is so that I can write my own programs for my Casio
 fx-CG50 calculator in Python rather than Casio BASIC and then convert them to Casio BASIC. Although this calculator already supports programming

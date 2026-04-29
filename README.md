@@ -6,7 +6,7 @@ in Python, it is very limited compared to what you can do with Casio BASIC on it
 
 You can access the CASIO fx-CG50 calculator manual for reference at [www.casio.com/content/dam/casio/global/support/manuals/calculators/pdf/004-en/f/fx-CG50_Soft_v340_EN.pdf](https://www.casio.com/content/dam/casio/global/support/manuals/calculators/pdf/004-en/f/fx-CG50_Soft_v340_EN.pdf#page=297)
 
-Page 297 of the PDF covers the Casio BASIC programming app on the calculator.
+Pages 297 to 364 of the PDF covers the Casio BASIC programming app on the calculator.
 
 
 Table of Contents

@@ -85,7 +85,7 @@ Takes a command line argument for the source file (if none, defaults to SOURCE_F
 ### Constants
 - SOURCE_FILE = "source/{}"  # The {} gets formatted with first file found in directory
 - BUILD_PATH = "build"
-- DEBUG: bool = True  # When true, main() prints preprocessed input and its transpiled output to the terminal
+- DEBUG: bool = True  # When True, main() prints preprocessed input and its transpiled output to the terminal
 - COMPILE_FOR_INTERPRETER = True  # translates tick() -> Tick which aren't usually present in Casio BASIC but are accepted by the interpreter
 
 ### Methods
@@ -96,7 +96,11 @@ Takes a command line argument for the source file (if none, defaults to SOURCE_F
 
 ## casio_interpreter.py Documentation
 
-W.I.P. Section
+Runs Casio BASIC code by interpreting it line by line.
+
+- BUILD_FILE: str = "build/{}"  # The {} gets formatted with first file found in directory
+- DEBUG: bool = True  # When True, main() prints instructions being ran and tokens as they're being processed
+- INSTRUCTIONS_PER_FRAME: int = 100
 
 
 ## Windows Build

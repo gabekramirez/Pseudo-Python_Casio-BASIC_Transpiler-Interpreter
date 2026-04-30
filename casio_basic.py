@@ -412,7 +412,7 @@ def fill_list(list_id: int, value: float):
 
 
 """
-mat (matrix) modules
+Matrix Methods
 TO BE IMPLEMENTED
 """
 

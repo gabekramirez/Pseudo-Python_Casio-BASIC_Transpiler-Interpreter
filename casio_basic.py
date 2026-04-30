@@ -17,12 +17,15 @@ no functions for handling the calculator's matrices, other display methods, and 
 
 _pygame.init()
 
-
 DISPLAY_WIDTH = 21
 DISPLAY_HEIGHT = 7
 DISPLAY_SIZE = DISPLAY_WIDTH * DISPLAY_HEIGHT
-CHAR_W, CHAR_H = 52, 72
+CHAR_W = 52
+CHAR_H = 72
 
+A = B = C = D = E = F = G = H = I = J = K = L = M = N = O = P = Q = R = S = T = U = V = W = X = Y = 0
+# integer variables need to be global!
+# global A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y
 
 _display_text: str = " " * DISPLAY_SIZE
 _keyboard_mapping = {_pygame.K_F1: 79, _pygame.K_F2: 69, _pygame.K_F3: 59, _pygame.K_F4: 49, _pygame.K_F5: 39, _pygame.K_F6: 29,
@@ -55,20 +58,36 @@ _answer_cursor: int = 0
 _running = True
 
 
+"""
+Non-Casio Methods
+"""
+
+
 def get_keyboard_mapping_dict():
-    return _keyboard_mapping
+    return _keyboard_mapping.copy()
 
 
-A = B = C = D = E = F = G = H = I = J = K = L = M = N = O = P = Q = R = S = T = U = V = W = X = Y = 0
-# integer variables need to be global!
-# global A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y
+def string_python_to_casio(text: str):
+    text = text.replace("/", "//").replace("*", "**")
+    text = text.replace("÷", "/").replace("×", "*")
+    return text
 
 
-# When this library is imported it will run a Pygame window on a secondary thread that displays all the games graphics and detects button presses.
+def string_casio_to_python(text: str):
+    text = text.replace("/", "÷").replace("*", "×")
+    text = text.replace("÷÷", "/").replace("\\\\", "\\").replace("××", "*")
+    return text
+
+
+def file_name_python_to_casio(text: str) -> str:
+    return _os.path.basename(text)[:-3].upper().replace("_", "")[:8]
+
+
+# When this library is imported use run(main) to create a Pygame window, handle io, and run all main() logic on a daemon thread.
 def run(main: Callable[[], None]):
     global _running, _get_key, _display_text, _answer, _answering, _answer_cursor
 
-    load()
+    _load()
     _Thread(target=main, daemon=True).start()
 
     def update_pygame_display(*, toggle_fullscreen: bool = False, reset: bool = False) -> _pygame.surface:
@@ -174,22 +193,6 @@ def run(main: Callable[[], None]):
     _pygame.quit()
 
 
-def string_python_to_casio(text: str):
-    text = text.replace("/", "//").replace("*", "**")
-    text = text.replace("÷", "/").replace("×", "*")
-    return text
-
-
-def string_casio_to_python(text: str):
-    text = text.replace("/", "÷").replace("*", "×")
-    text = text.replace("÷÷", "/").replace("\\\\", "\\").replace("××", "*")
-    return text
-
-
-def file_name_python_to_casio(text: str) -> str:
-    return _os.path.basename(text)[:-3].upper().replace("_", "")[:8]
-
-
 def tick(times: int = 1):
     _pygame.time.wait(150 * times)
 
@@ -199,26 +202,9 @@ def stop():
         tick()
 
 
-def save():
-    global _lists
-    data = [','.join([str(i) for i in list_]) + '\n' for list_ in _lists]
-    data[-1] = data[-1][:-1]
-    with open("lists.csv", "w") as file:
-        file.writelines(data)
-
-
-def load():
-    global _lists
-    if _os.path.isfile("lists.csv"):
-        with open("lists.csv", "r") as file:
-            data = file.readlines()
-        _lists.clear()
-        for line in data:
-            line = line.strip()
-            if line == "":
-                _lists.append([])
-            else:
-                _lists.append([int(i) for i in line.split(',')])
+"""
+IO Methods
+"""
 
 
 # Casio BASIC equivalent: Getkey
@@ -226,38 +212,26 @@ def get_key() -> int:
     return _get_key
 
 
+# Casio BASIC equivalent: "[text]"?
+def ask(text: str, value_type: type):
+    global _answering, _answer, _answer_cursor
+    show_str(text)
+    _answer_cursor = (len(text) // DISPLAY_WIDTH + 1) * DISPLAY_WIDTH
+    _answering = True
+    _answer = ""
+    while _answering:
+        while _answering:
+            pass
+        try:
+            return value_type(_answer)
+        except ValueError:
+            _answering = True
+
+
 # Casio BASIC equivalent: ClrText
 def clr_text():
     global _display_text
     _display_text = ' ' * DISPLAY_SIZE
-
-
-# Casio BASIC equivalent: Locate [x],[y],"[text]"
-def locate(x: int, y: int, text: str):
-    global _display_text
-    x -= 1
-    y -= 1
-    if 0 <= x and x + len(text) <= DISPLAY_WIDTH and 0 <= y < DISPLAY_HEIGHT:
-        p = y * DISPLAY_WIDTH + x
-        _display_text = _display_text[:p] + text + _display_text[(p + len(text)):]
-    else:
-        raise ValueError(x, y, text)
-
-
-def frac(x: float | int):
-    return x % 1
-
-
-def mod(x: float | int, y: float | int):
-    return x % y
-
-
-"""
-str (string) modules
-"""
-
-
-__strs: list[str | None] = [None] * 20
 
 
 # Casio BASIC equivalent: "[text]"
@@ -300,35 +274,52 @@ def disps(text: str, *, break_up: bool = False, return_str: bool = False):
     while _get_key != 31: pass
 
 
-# Casio BASIC equivalent: "[text]"?
-def ask(text: str, value_type: type):
-    global _answering, _answer, _answer_cursor
-    show_str(text)
-    _answer_cursor = (len(text) // DISPLAY_WIDTH + 1) * DISPLAY_WIDTH
-    _answering = True
-    _answer = ""
-    while _answering:
-        while _answering:
-            pass
-        try:
-            return value_type(_answer)
-        except ValueError:
-            _answering = True
+# Casio BASIC equivalent: Locate [x],[y],"[text]"
+def locate(x: int, y: int, text: str):
+    global _display_text
+    x -= 1
+    y -= 1
+    if 0 <= x and x + len(text) <= DISPLAY_WIDTH and 0 <= y < DISPLAY_HEIGHT:
+        p = y * DISPLAY_WIDTH + x
+        _display_text = _display_text[:p] + text + _display_text[(p + len(text)):]
+    else:
+        raise ValueError(x, y, text)
 
 
-# Casio BASIC equivalent: "[value]"->Str [str_id]
-def set_str(str_id: int, value: str):
-    global __strs
-    if len(value) > 255:
-        raise ValueError(f"len(\"{value}\") = {len(value)} exceeds 255")
-    __strs[str_id - 1] = value
+"""
+Math Methods
+"""
+
+
+def frac(x: float | int):
+    return x % 1
+
+
+def mod(x: float | int, y: float | int):
+    return x % y
+
+
+"""
+String Methods
+"""
+
+
+_strs: list[str | None] = [None] * 20
 
 
 # Casio BASIC equivalent: Str [str_id]
 def get_str(str_id: int) -> str:
-    global __strs
-    str_id = __strs[str_id - 1]
+    global _strs
+    str_id = _strs[str_id - 1]
     return str_id
+
+
+# Casio BASIC equivalent: "[value]"->Str [str_id]
+def set_str(str_id: int, value: str):
+    global _strs
+    if len(value) > 255:
+        raise ValueError(f"len(\"{value}\") = {len(value)} exceeds 255")
+    _strs[str_id - 1] = value
 
 
 # Casio BASIC equivalent: StrMid("[value]",start,length)
@@ -349,12 +340,47 @@ def str_mid(value: str, start: int, length: int) -> str:
 
 
 """
-list modules
+List Methods
 """
 
 
 _lists: list[list[float]] = [[] for _ in range(26)]
-# load()
+
+
+def _save():
+    global _lists
+    data = [','.join([str(i) for i in list_]) + '\n' for list_ in _lists]
+    data[-1] = data[-1][:-1]
+    with open("lists.csv", "w") as file:
+        file.writelines(data)
+
+
+def _load():
+    global _lists
+    if _os.path.isfile("lists.csv"):
+        with open("lists.csv", "r") as file:
+            data = file.readlines()
+        _lists.clear()
+        for line in data:
+            line = line.strip()
+            if line == "":
+                _lists.append([])
+            else:
+                _lists.append([int(i) for i in line.split(',')])
+
+
+# Casio BASIC equivalent: Dim List [list_id]
+def get_dim_list(list_id: int) -> int:
+    return len(_lists[list_id - 1])
+
+
+# Casio BASIC equivalent: [dim]->Dim List [list_id]
+def set_dim_list(list_id: int, dim: int):
+    list_id = _lists[list_id - 1]
+    list_id.clear()
+    for _ in range(dim):
+        list_id.append(0)
+    _save()
 
 
 # Casio BASIC equivalent: List [list_id][[index]]
@@ -365,7 +391,7 @@ def get_list(list_id: int, index: int) -> int | float:
 # Casio BASIC equivalent: [value]->List [list_id][[index]]
 def set_list(list_id: int, index: int, value: float):
     _lists[list_id - 1][index - 1] = value
-    save()
+    _save()
 
 
 # Casio BASIC equivalent: List [list_id_2]->List [list_id_1]
@@ -374,21 +400,7 @@ def copy_list(list_id_1: int, list_id_2: int):
     list_id_1.clear()
     for value in _lists[list_id_2 - 1]:
         list_id_1.append(value)
-    save()
-
-
-# Casio BASIC equivalent: [dim]->Dim List [list_id]
-def set_dim_list(list_id: int, dim: int):
-    list_id = _lists[list_id - 1]
-    list_id.clear()
-    for _ in range(dim):
-        list_id.append(0)
-    save()
-
-
-# Casio BASIC equivalent: Dim List [list_id]
-def get_dim_list(list_id: int) -> int:
-    return len(_lists[list_id - 1])
+    _save()
 
 
 # Fill([value],List [list_id])
@@ -396,7 +408,7 @@ def fill_list(list_id: int, value: float):
     list_id = _lists[list_id - 1]
     for i in range(len(list_id)):
         list_id[i] = value
-    save()
+    _save()
 
 
 """
@@ -405,4 +417,4 @@ TO BE IMPLEMENTED
 """
 
 
-__mats: list = []
+_mats: list = []

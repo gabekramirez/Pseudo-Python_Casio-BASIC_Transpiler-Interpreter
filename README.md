@@ -119,20 +119,20 @@ Requires that the casio.ttf font file exists in the same directory as it.
 
 ## Windows Build
 
-"""shell
+```shell
 mv source/hello_world_example.py hello_world_example.py
 pyinstaller "hello_world_example.py" -w -n "Hello World.exe" -F --clean --add-data "casio.ttf;."
 mv hello_world_example.py source/hello_world_example.py
-"""
+```
 
 
 ## Web Build
 
-"""shell
+```shell
 python casio_transpiler.py source/hello_world_example.py
 mv casio_interpreter.py main.py
 mv "build/HELLOWOR.txt" "HELLOWOR.txt"
 pygbag .
 mv main.py casio_interpreter.py
 mv "HELLOWOR.txt" "build/HELLOWOR.txt"
-"""
+```

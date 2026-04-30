@@ -394,12 +394,12 @@ def set_list(list_id: int, index: int, value: float):
     _save()
 
 
-# Casio BASIC equivalent: List [list_id_2]->List [list_id_1]
-def copy_list(list_id_1: int, list_id_2: int):
-    list_id_1 = _lists[list_id_1 - 1]
-    list_id_1.clear()
-    for value in _lists[list_id_2 - 1]:
-        list_id_1.append(value)
+# Casio BASIC equivalent: List [list_from]->List [list_to]
+def copy_list(list_to: int, list_from: int):
+    list_to = _lists[list_to - 1]
+    list_to.clear()
+    for value in _lists[list_from - 1]:
+        list_to.append(value)
     _save()
 
 

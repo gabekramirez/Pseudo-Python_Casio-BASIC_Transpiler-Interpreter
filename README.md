@@ -9,7 +9,7 @@ Table of Contents
 =================
 * [Casio fx-CG50 Calculator Manual](#casio-fx-cg50-calculator-manual)
 * [casio_basic.py Documentation](#casio_basicpy-documentation)
-  * [Constants](#constants)
+  * [Constants (casio_basic.py)](#constants-casio_basicpy)
   * [Global Variables](#global-variables)
   * [Non-Casio Methods](#non-casio-methods)
   * [IO Methods](#io-methods)
@@ -17,10 +17,10 @@ Table of Contents
   * [String Methods](#string-methods)
   * [List Methods](#list-methods)
 * [casio_transpiler.py Documentation](#casio_transpilerpy-documentation)
-  * [Constants](#constants)
+  * [Constants (casio_transpiler.py)](#constants-casio_transpilerpy)
   * [Methods](#methods)
 * [casio_interpreter.py Documentation](#casio_interpreterpy-documentation)
-  * [Constants](#constants)
+  * [Constants (casio_interpreter.py)](#constants-casio_interpreterpy)
 * [Windows Build](#windows-build)
 * [Web Build](#web-build)
 
@@ -34,7 +34,7 @@ Pages 297 to 364 of the PDF covers the Casio BASIC programming app on the calcul
 
 ## casio_basic.py Documentation
 
-### Constants
+### Constants (casio_basic.py)
 - DISPLAY_WIDTH: int = 21
 - DISPLAY_HEIGHT: int = 7
 - DISPLAY_SIZE: int = 147
@@ -87,7 +87,7 @@ Takes a command line argument for the source file (if none, defaults to SOURCE_F
 
 Puts the output file in the BUILD_PATH directory (creates BUILD_PATH directory if it doesn't already exist).
 
-### Constants
+### Constants (casio_transpiler.py)
 - SOURCE_FILE = "source/{}"  # The {} gets formatted with first file found in directory
 - BUILD_PATH = "build"
 - DEBUG: bool = True  # When True, main() prints preprocessed input and its transpiled output to the terminal
@@ -105,7 +105,7 @@ Runs Casio BASIC code by interpreting it line by line.
 
 Takes a command line argument for the Casio BASIC file (if none, defaults to BUILD_FILE).
 
-### Constants
+### Constants (casio_interpreter.py)
 - BUILD_FILE: str = "build/{}"  # The {} gets formatted with first file found in directory
 - DEBUG: bool = True  # When True, main() prints instructions being ran and tokens as they're being processed
 - INSTRUCTIONS_PER_FRAME: int = 100

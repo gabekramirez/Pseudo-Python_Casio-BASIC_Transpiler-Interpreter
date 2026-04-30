@@ -9,6 +9,13 @@ Table of Contents
 =================
 * [Casio fx-CG50 Calculator Manual](#casio-fx-cg50-calculator-manual)
 * [casio_basic.py Documentation](#casio_basicpy-documentation)
+  * [Constants](#constants)
+  * [Global Variables](#global-variables)
+  * [Non-Casio Methods](#non-casio-methods)
+  * [IO Methods](#io-methods)
+  * [Math Methods](#math-methods)
+  * [String Methods](#string-methods)
+  * [List Methods](#list-methods)
 * [casio_interpreter.py Documentation](#casio_interpreterpy-documentation)
 * [casio_transpiler.py Documentation](#casio_transpilerpy-documentation)
 * [Windows Build](#windows-build)
@@ -24,7 +31,49 @@ Pages 297 to 364 of the PDF covers the Casio BASIC programming app on the calcul
 
 ## casio_basic.py Documentation
 
-W.I.P. Section
+### Constants
+- DISPLAY_WIDTH: int = 21
+- DISPLAY_HEIGHT: int = 7
+- DISPLAY_SIZE: int = 147
+- CHAR_W: int = 52
+- CHAR_H: int = 72
+
+### Global Variables
+- A through Z: float = 0
+
+### Non-Casio Methods
+- get_keyboard_mapping_dict() -> dict\[int: int\]
+- string_python_to_casio(text: str) -> str
+- string_casio_to_python(text: str) -> str
+- file_name_python_to_casio(text: str) -> str
+- run(main: () -> None) -> None
+- tick(times: int = 1) -> None
+- stop() -> None
+
+### IO Methods
+- get_key() -> int
+- ask(text: str, value_type: type) -> value_type
+- clr_text() -> None
+- show_str(text: str) -> None
+- disps(text: str, *, break_up: bool = False, return_str: bool = False) -> None
+- locate(x: int, y: int, text: str) -> None
+
+### Math Methods
+- frac(x: float | int) -> float
+- mod(x: float | int, y: float | int) -> float
+
+### String Methods
+- get_str(str_id: int) -> str
+- set_str(str_id: int, value: str) -> None
+- str_mid(value: str, start: int, length: int) -> str
+
+### List Methods
+- get_dim_list(list_id: int) -> int
+- set_dim_list(list_id: int, dim: int) -> None
+- get_list(list_id: int, index: int) -> int | float
+- set_list(list_id: int, index: int, value: float) -> None
+- copy_list(list_id_1: int, list_id_2: int) -> None
+- fill_list(list_id: int, value: float) -> None
 
 
 ## casio_interpreter.py Documentation

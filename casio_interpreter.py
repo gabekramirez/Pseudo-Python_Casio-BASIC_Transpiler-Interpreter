@@ -5,8 +5,8 @@ import sys
 import asyncio
 
 
-BUILD_FILE = "build/{}"  # {} gets formatted with first file found in directory
-DEBUG = True
+RUN_FILE = "./{}"  # {} gets formatted with first file found in directory
+DEBUG = False
 INSTRUCTIONS_PER_FRAME = 100
 
 
@@ -16,15 +16,16 @@ _OPERATORS = ("^", "*", "/", "+", "-", "=", "<>", "<", ">", "<=", ">=", " And ",
 
 async def main():
     if len(sys.argv) == 1:
-        file_name = BUILD_FILE
+        file_name = RUN_FILE
         if "{}" in file_name:
-            file_name = file_name.format(os.listdir(os.path.dirname(file_name))[0])
+            directory = os.path.dirname(file_name)
+            directory_files = [f for f in os.listdir(directory) if f.endswith(".txt")]
+            file_name = file_name.format(directory_files[0])
     elif len(sys.argv) == 2:
         file_name = sys.argv[1]
     else:
         raise IndexError(f"Expected 0 or 1 command line arguments.\nGot {len(sys.argv) - 1}")
 
-    load()
     with open(file_name, "r") as file_data:
         file = "".join(file_data.readlines()).split("\n")
 
@@ -296,7 +297,6 @@ async def main():
             elif len(tokenized) == 1 and tokenized[0][0] == "String":
                 display_text = tokenized[0][1]
                 display_text += " " * (DISPLAY_SIZE - len(display_text))
-                print("!!!")
                 tokenized.clear()
                 break
 
@@ -548,7 +548,6 @@ async def main():
                     c = "|" if answer_tick % 2 < 1 else " "
                     display_text = display_text[:answer_cursor] + c + display_text[answer_cursor + 1:]
 
-                if display_text.strip(): print(display_text)
                 display_screen.fill((0, 0, 0))
                 for i in range(DISPLAY_SIZE):
                     rendered_line = display_font.render(display_text[i], False, (255, 255, 255))

@@ -1,3 +1,5 @@
+import os
+
 import pygame as _pygame
 import os as _os
 import math
@@ -127,7 +129,7 @@ def run(main: Callable[[], None]):
     previous_screen_size = (640, 360)
     update_pygame_display(reset=True)
     display_screen = _pygame.Surface((DISPLAY_WIDTH * CHAR_W, DISPLAY_HEIGHT * CHAR_H))
-    display_font = _pygame.font.Font("../casio.ttf", 64)
+    display_font = _pygame.font.Font(os.path.join(os.path.dirname(__file__), "casio.ttf"), 64)
     keys_pressed = []
     clock = _pygame.time.Clock()
     _running = True

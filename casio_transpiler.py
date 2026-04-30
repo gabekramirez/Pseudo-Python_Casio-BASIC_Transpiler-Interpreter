@@ -5,7 +5,7 @@ import sys
 
 SOURCE_FILE = "source/{}"  # {} gets formatted with first file found in directory
 BUILD_PATH = "build"
-DEBUG = True
+DEBUG = False
 COMPILE_FOR_INTERPRETER = True  # adds Tick statements which aren't usually present in Casio BASIC
 
 

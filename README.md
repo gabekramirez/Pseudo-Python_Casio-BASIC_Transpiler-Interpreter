@@ -34,6 +34,10 @@ Pages 297 to 364 of the PDF covers the Casio BASIC programming app on the calcul
 
 ## casio_basic.py
 
+Python Library for simulating Casio BASIC in Python.
+
+Requires that the casio.ttf font file exists in the same directory as it.
+
 ### Constants (casio_basic.py)
 - DISPLAY_WIDTH: int = 21
 - DISPLAY_HEIGHT: int = 7
@@ -103,19 +107,32 @@ Puts the output file in the BUILD_PATH directory (creates BUILD_PATH directory i
 
 Runs Casio BASIC code by interpreting it line by line.
 
-Takes a command line argument for the Casio BASIC file (if none, defaults to BUILD_FILE).
+Takes a command line argument for the Casio BASIC file (if none, defaults to RUN_FILE).
+
+Requires that the casio.ttf font file exists in the same directory as it.
 
 ### Constants (casio_interpreter.py)
-- BUILD_FILE: str = "build/{}"  # The {} gets formatted with first file found in directory
+- RUN_FILE: str = "./{}"  # The {} gets formatted with first file found in directory
 - DEBUG: bool = True  # When True, main() prints instructions being ran and tokens as they're being processed
 - INSTRUCTIONS_PER_FRAME: int = 100
 
 
 ## Windows Build
 
-W.I.P. Section
+"""shell
+mv source/hello_world_example.py hello_world_example.py
+pyinstaller "hello_world_example.py" -w -n "Hello World.exe" -F --clean --add-data "casio.ttf;."
+mv hello_world_example.py source/hello_world_example.py
+"""
 
 
 ## Web Build
 
-W.I.P. Section
+"""shell
+python casio_transpiler.py source/hello_world_example.py
+mv casio_interpreter.py main.py
+mv "build/HELLOWOR.txt" "HELLOWOR.txt"
+pygbag .
+mv main.py casio_interpreter.py
+mv "HELLOWOR.txt" "build/HELLOWOR.txt"
+"""

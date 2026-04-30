@@ -8,7 +8,7 @@ in Python, it is very limited compared to what you can do with Casio BASIC on it
 Table of Contents
 =================
 * [Casio fx-CG50 Calculator Manual](#casio-fx-cg50-calculator-manual)
-* [casio_basic.py Documentation](#casio_basicpy-documentation)
+* [casio_basic.py Documentation](#casio_basicpy)
   * [Constants (casio_basic.py)](#constants-casio_basicpy)
   * [Global Variables](#global-variables)
   * [Non-Casio Methods](#non-casio-methods)
@@ -16,10 +16,10 @@ Table of Contents
   * [Math Methods](#math-methods)
   * [String Methods](#string-methods)
   * [List Methods](#list-methods)
-* [casio_transpiler.py Documentation](#casio_transpilerpy-documentation)
+* [casio_transpiler.py Documentation](#casio_transpilerpy)
   * [Constants (casio_transpiler.py)](#constants-casio_transpilerpy)
   * [Methods](#methods)
-* [casio_interpreter.py Documentation](#casio_interpreterpy-documentation)
+* [casio_interpreter.py Documentation](#casio_interpreterpy)
   * [Constants (casio_interpreter.py)](#constants-casio_interpreterpy)
 * [Windows Build](#windows-build)
 * [Web Build](#web-build)
@@ -32,7 +32,7 @@ You can access the CASIO fx-CG50 calculator manual for reference at [www.casio.c
 Pages 297 to 364 of the PDF covers the Casio BASIC programming app on the calculator.
 
 
-## casio_basic.py Documentation
+## casio_basic.py
 
 ### Constants (casio_basic.py)
 - DISPLAY_WIDTH: int = 21
@@ -79,7 +79,7 @@ Pages 297 to 364 of the PDF covers the Casio BASIC programming app on the calcul
 - fill_list(list_id: int, value: float) -> None
 
 
-## casio_transpiler.py Documentation
+## casio_transpiler.py
 
 Transpiles Pseudo-Python to Casio BASIC.
 
@@ -99,7 +99,7 @@ Puts the output file in the BUILD_PATH directory (creates BUILD_PATH directory i
 - python_to_casio(input_file: str) -> str
 
 
-## casio_interpreter.py Documentation
+## casio_interpreter.py
 
 Runs Casio BASIC code by interpreting it line by line.
 

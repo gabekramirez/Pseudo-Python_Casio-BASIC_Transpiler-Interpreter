@@ -16,8 +16,10 @@ Table of Contents
   * [Math Methods](#math-methods)
   * [String Methods](#string-methods)
   * [List Methods](#list-methods)
-* [casio_interpreter.py Documentation](#casio_interpreterpy-documentation)
 * [casio_transpiler.py Documentation](#casio_transpilerpy-documentation)
+  * [Constants](#constants)
+  * [Methods](#methods)
+* [casio_interpreter.py Documentation](#casio_interpreterpy-documentation)
 * [Windows Build](#windows-build)
 * [Web Build](#web-build)
 
@@ -76,12 +78,23 @@ Pages 297 to 364 of the PDF covers the Casio BASIC programming app on the calcul
 - fill_list(list_id: int, value: float) -> None
 
 
-## casio_interpreter.py Documentation
-
-W.I.P. Section
-
-
 ## casio_transpiler.py Documentation
+
+Takes a command line argument for the source file (if none, defaults to SOURCE_FILE) and transpiles it from Pseudo-Python to a Casio BASIC file put in the BUILD_PATH directory (creating the BUILD_PATH directory if it doesn't already exist).
+
+### Constants
+- SOURCE_FILE = "source/{}"  # The {} gets formatted with first file found in directory
+- BUILD_PATH = "build"
+- DEBUG: bool = True  # When true, main() prints preprocessed input and its transpiled output to the terminal
+- COMPILE_FOR_INTERPRETER = True  # translates tick() -> Tick which aren't usually present in Casio BASIC but are accepted by the interpreter
+
+### Methods
+- compile_expression(expression: str, functions: list\[str\]) -> str | tuple\[str, int\]
+- compile_line(line: str, functions: list\[str\]) -> str | tuple\[str, int\]
+- python_to_casio(input_file: str) -> str
+
+
+## casio_interpreter.py Documentation
 
 W.I.P. Section
 

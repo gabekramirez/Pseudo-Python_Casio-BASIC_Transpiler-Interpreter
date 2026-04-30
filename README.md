@@ -8,7 +8,7 @@ in Python, it is very limited compared to what you can do with Casio BASIC on it
 Table of Contents
 =================
 * [Casio fx-CG50 Calculator Manual](#casio-fx-cg50-calculator-manual)
-* [casio_basic.py Documentation](#casio_basicpy)
+* [casio_basic.py](#casio_basicpy)
   * [Constants (casio_basic.py)](#constants-casio_basicpy)
   * [Global Variables](#global-variables)
   * [Non-Casio Methods](#non-casio-methods)
@@ -16,10 +16,10 @@ Table of Contents
   * [Math Methods](#math-methods)
   * [String Methods](#string-methods)
   * [List Methods](#list-methods)
-* [casio_transpiler.py Documentation](#casio_transpilerpy)
+* [casio_transpiler.py](#casio_transpilerpy)
   * [Constants (casio_transpiler.py)](#constants-casio_transpilerpy)
   * [Methods](#methods)
-* [casio_interpreter.py Documentation](#casio_interpreterpy)
+* [casio_interpreter.py](#casio_interpreterpy)
   * [Constants (casio_interpreter.py)](#constants-casio_interpreterpy)
 * [Windows Build](#windows-build)
 * [Web Build](#web-build)

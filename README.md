@@ -72,7 +72,7 @@ Pages 297 to 364 of the PDF covers the Casio BASIC programming app on the calcul
 - set_dim_list(list_id: int, dim: int) -> None
 - get_list(list_id: int, index: int) -> int | float
 - set_list(list_id: int, index: int, value: float) -> None
-- copy_list(list_id_1: int, list_id_2: int) -> None
+- copy_list(list_id1: int, list_id2: int) -> None
 - fill_list(list_id: int, value: float) -> None
 
 

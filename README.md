@@ -119,20 +119,28 @@ Requires that the casio.ttf font file exists in the same directory as it.
 
 ## Windows Build
 
+Dependencies: [Python](https://www.python.org/), [Pygame](https://www.pygame.org/docs/), and [PyInstaller](https://pyinstaller.org/en/stable/).
+
 ```shell
-mv source/hello_world_example.py hello_world_example.py
+git clone https://github.com/gabekramirez/Pseudo-Python_Casio-BASIC_Transpiler-Interpreter.git
+cd Pseudo-Python_Casio-BASIC_Transpiler-Interpreter
+mv source/hello_world_example.py ./
 pyinstaller "hello_world_example.py" -w -n "Hello World.exe" -F --clean --add-data "casio.ttf;."
-mv hello_world_example.py source/hello_world_example.py
+mv hello_world_example.py source/
 ```
 
 
 ## Web Build
 
+Dependencies: [Python](https://www.python.org/), [Pygame](https://www.pygame.org/docs/), and [Pygbag](https://pypi.org/project/pygbag/).
+
 ```shell
+git clone https://github.com/gabekramirez/Pseudo-Python_Casio-BASIC_Transpiler-Interpreter.git
+cd Pseudo-Python_Casio-BASIC_Transpiler-Interpreter
 python casio_transpiler.py source/hello_world_example.py
 mv casio_interpreter.py main.py
-mv "build/HELLOWOR.txt" "HELLOWOR.txt"
+mv "build/HELLOWOR.txt" ./
 pygbag .
 mv main.py casio_interpreter.py
-mv "HELLOWOR.txt" "build/HELLOWOR.txt"
+mv "HELLOWOR.txt" build/
 ```

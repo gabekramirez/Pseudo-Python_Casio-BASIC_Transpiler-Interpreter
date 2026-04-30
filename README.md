@@ -20,6 +20,7 @@ Table of Contents
   * [Constants](#constants)
   * [Methods](#methods)
 * [casio_interpreter.py Documentation](#casio_interpreterpy-documentation)
+  * [Constants](#constants)
 * [Windows Build](#windows-build)
 * [Web Build](#web-build)
 
@@ -80,7 +81,11 @@ Pages 297 to 364 of the PDF covers the Casio BASIC programming app on the calcul
 
 ## casio_transpiler.py Documentation
 
-Takes a command line argument for the source file (if none, defaults to SOURCE_FILE) and transpiles it from Pseudo-Python to a Casio BASIC file put in the BUILD_PATH directory (creating the BUILD_PATH directory if it doesn't already exist).
+Transpiles Pseudo-Python to Casio BASIC.
+
+Takes a command line argument for the source file (if none, defaults to SOURCE_FILE).
+
+Puts the output file in the BUILD_PATH directory (creates BUILD_PATH directory if it doesn't already exist).
 
 ### Constants
 - SOURCE_FILE = "source/{}"  # The {} gets formatted with first file found in directory
@@ -98,6 +103,9 @@ Takes a command line argument for the source file (if none, defaults to SOURCE_F
 
 Runs Casio BASIC code by interpreting it line by line.
 
+Takes a command line argument for the Casio BASIC file (if none, defaults to BUILD_FILE).
+
+### Constants
 - BUILD_FILE: str = "build/{}"  # The {} gets formatted with first file found in directory
 - DEBUG: bool = True  # When True, main() prints instructions being ran and tokens as they're being processed
 - INSTRUCTIONS_PER_FRAME: int = 100
